@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ tag.meta_title|default:tag.name }} | Traverse The Himalayas{% endblock %}
+{% block title %}{{ tag.meta_title|default:tag.name }} {{ title_suffix }}{% endblock %}
 
 {% block content %}
     <div class="min-h-screen">

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ term.meta_title|default:term.name }} | Traverse The Himalayas{% endblock %}
+{% block title %}{{ term.meta_title|default:term.name }} {{ title_suffix }}{% endblock %}
 
 {% block content %}
     <section class="py-16">

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Contact Us | Traverse The Himalayas{% endblock %}
+{% block title %}Contact Us {{ title_suffix }}{% endblock %}
 
 {% block content %}
     <section class="py-24">
@@ -22,7 +22,7 @@
                         </svg>
                     </div>
                     <h3 class="font-semibold text-slate-900 mb-1">Email</h3>
-                    <p class="text-slate-600">hello@traversethehimalayas.com</p>
+                    <p class="text-slate-600">{{ site_config.contact_email|default:"hello@example.com" }}</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">

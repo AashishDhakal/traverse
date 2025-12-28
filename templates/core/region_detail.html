@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ region.meta_title|default:region.name }} | Traverse The Himalayas{% endblock %}
+{% block title %}{{ region.meta_title|default:region.name }} {{ title_suffix }}{% endblock %}
 
 {% block content %}
     <section class="py-16">

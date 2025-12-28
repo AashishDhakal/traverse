@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Traverse The Himalayas | Expert-Led Himalayan Adventures{% endblock %}
+{% block title %}{{ hero_title }}{{ title_suffix }}{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -28,52 +28,51 @@
                 </div>
 
                 <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight mb-6">
-                    Traverse
-                    <span class="block gradient-text">The Himalayas</span>
+                    {{ hero_title }}
                 </h1>
 
                 <p class="text-xl lg:text-2xl text-slate-300 max-w-2xl mb-10 leading-relaxed">
-                    Expert-led adventures through the world's most majestic mountain ranges.
-                    From Everest Base Camp to hidden valleys — discover Nepal like never before.
+                    {{ hero_subtitle }}
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4 mb-16">
                     <a href="{% url 'trips:trip_list' %}" class="px-8 py-4 bg-gradient-to-r from-himalaya-500 to-himalaya-600 text-white text-lg font-semibold rounded-full hover:shadow-xl hover:shadow-himalaya-500/30 transform hover:-translate-y-1 transition-all text-center">
-                        Explore Trips
+                        {{ hero_cta_text }}
                     </a>
-                    <a href="{% url 'content:post_list' %}" class="px-8 py-4 bg-white/10 backdrop-blur-sm text-white text-lg font-semibold rounded-full hover:bg-white/20 transition-colors text-center border border-white/20">
-                        Read Our Guides
-                    </a>
-                </div>
+                </a>
+                <a href="{% url 'content:post_list' %}" class="px-8 py-4 bg-white/10 backdrop-blur-sm text-white text-lg font-semibold rounded-full hover:bg-white/20 transition-colors text-center border border-white/20">
+                    Read Our Guides
+                </a>
+            </div>
 
             <!-- Stats -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
-                    <div>
-                        <div class="text-3xl lg:text-4xl font-bold text-white">15+</div>
-                        <div class="text-sm text-slate-400">Years Experience</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl lg:text-4xl font-bold text-white">500+</div>
-                        <div class="text-sm text-slate-400">Happy Trekkers</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl lg:text-4xl font-bold text-white">50+</div>
-                        <div class="text-sm text-slate-400">Unique Routes</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl lg:text-4xl font-bold text-white">100%</div>
-                        <div class="text-sm text-slate-400">Safety Record</div>
-                    </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                <div>
+                    <div class="text-3xl lg:text-4xl font-bold text-white">15+</div>
+                    <div class="text-sm text-slate-400">Years Experience</div>
+                </div>
+                <div>
+                    <div class="text-3xl lg:text-4xl font-bold text-white">500+</div>
+                    <div class="text-sm text-slate-400">Happy Trekkers</div>
+                </div>
+                <div>
+                    <div class="text-3xl lg:text-4xl font-bold text-white">50+</div>
+                    <div class="text-sm text-slate-400">Unique Routes</div>
+                </div>
+                <div>
+                    <div class="text-3xl lg:text-4xl font-bold text-white">100%</div>
+                    <div class="text-sm text-slate-400">Safety Record</div>
                 </div>
             </div>
         </div>
+    </div>
 
     <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-        </div>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
+    </div>
     </section>
 
 <!-- Featured Trips Section -->

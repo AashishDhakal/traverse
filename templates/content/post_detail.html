@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ post.meta_title|default:post.title }} | Traverse The Himalayas{% endblock %}
+{% block title %}{{ post.meta_title|default:post.title }} {{ title_suffix }}{% endblock %}
 
 {% block content %}
     <article class="py-12">

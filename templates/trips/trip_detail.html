@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ trip.meta_title|default:trip.title }} | Traverse The Himalayas{% endblock %}
+{% block title %}{{ trip.meta_title|default:trip.title }} {{ title_suffix }}{% endblock %}
 
 {% block content %}
     <article>
