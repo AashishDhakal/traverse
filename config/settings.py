@@ -271,26 +271,32 @@ META_TWITTER_SITE = os.environ.get("META_TWITTER_SITE", "")
 
 def get_site_title(request):
     """Get site title dynamically from SiteConfiguration."""
-    if hasattr(request, "site_config") and request.site_config:
-        return request.site_config.brand_name
+    try:
+        if hasattr(request, "site_config") and request.site_config:
+            return request.site_config.brand_name
+    except Exception:
+        pass
     return "Nepal Travel Admin"
 
 
 def get_site_icon(request):
     """Get site icon dynamically from SiteConfiguration."""
-    if hasattr(request, "site_config") and request.site_config and request.site_config.logo:
-        return request.site_config.logo.url
+    try:
+        if hasattr(request, "site_config") and request.site_config and request.site_config.logo:
+            return request.site_config.logo.url
+    except Exception:
+        pass
     return "/static/images/logo.png"
 
 
 UNFOLD = {
-    "SITE_TITLE": get_site_title,
-    "SITE_HEADER": get_site_title,
+    "SITE_TITLE": os.environ.get("ADMIN_SITE_TITLE", "Nepal Travel Admin"),
+    "SITE_HEADER": os.environ.get("ADMIN_SITE_TITLE", "Nepal Travel Admin"),
     "SITE_SUBHEADER": "Content-Commerce Admin",
     "SITE_URL": "/",
     "SITE_ICON": {
-        "light": get_site_icon,
-        "dark": get_site_icon,
+        "light": lambda request: "/static/images/logo.png",
+        "dark": lambda request: "/static/images/logo.png",
     },
     "SITE_SYMBOL": "hiking",  # Material symbol
     "SHOW_HISTORY": True,

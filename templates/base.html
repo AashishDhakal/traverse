@@ -9,6 +9,36 @@
         {% load meta %}
         {% include 'meta/meta.html' %}
 
+    <!-- Dynamic Theme Colors -->
+        <style>
+            :root {
+                --color-primary: {{ primary_color }};
+                --color-secondary: {{ secondary_color }};
+                --color-accent: {{ accent_color }};
+            }
+            .btn-primary {
+                background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            }
+            .btn-primary:hover {
+                box-shadow: 0 10px 25px -5px var(--color-primary);
+            }
+            .text-brand {
+                color: var(--color-primary);
+            }
+            .bg-brand {
+                background-color: var(--color-primary);
+            }
+            .border-brand {
+                border-color: var(--color-primary);
+            }
+            .gradient-text {
+                background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+        </style>
+
     <!-- Tailwind CSS via CDN (replace with compiled CSS in production) -->
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
@@ -166,7 +196,7 @@
 
                 <!-- CTA Button -->
                     <div class="hidden lg:flex items-center space-x-4">
-                        <a href="{% url 'core:contact' %}" class="px-6 py-2.5 bg-gradient-to-r from-himalaya-500 to-himalaya-600 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-himalaya-500/30 transform hover:-translate-y-0.5">
+                        <a href="{% url 'core:contact' %}" class="px-6 py-2.5 btn-primary text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-himalaya-500/30 transform hover:-translate-y-0.5">
                             Plan Your Trip
                         </a>
                     </div>
@@ -199,7 +229,7 @@
                     <a href="{% url 'team:member_list' %}" class="block px-4 py-3 text-slate-700 hover:text-himalaya-600 hover:bg-himalaya-50 rounded-lg font-medium">Our Team</a>
                     <a href="{% url 'glossary:term_list' %}" class="block px-4 py-3 text-slate-700 hover:text-himalaya-600 hover:bg-himalaya-50 rounded-lg font-medium">Glossary</a>
                     <div class="pt-4">
-                        <a href="{% url 'core:contact' %}" class="block w-full text-center px-6 py-3 bg-gradient-to-r from-himalaya-500 to-himalaya-600 text-white font-semibold rounded-full">
+                        <a href="{% url 'core:contact' %}" class="block w-full text-center px-6 py-3 btn-primary text-white font-semibold rounded-full">
                             Plan Your Trip
                         </a>
                     </div>
