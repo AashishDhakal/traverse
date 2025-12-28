@@ -1,0 +1,565 @@
+{% extends 'base.html' %}
+
+{% block title %}Traverse The Himalayas | Expert-Led Himalayan Adventures{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center">
+    <!-- Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-himalaya-950">
+            <div class="absolute inset-0 opacity-40">
+                <div class="absolute inset-0 bg-[url('/static/images/hero_himalaya.png')] bg-cover bg-center"></div>
+            </div>
+            <div class="absolute inset-0 hero-gradient"></div>
+        </div>
+
+    <!-- Floating Particles -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute w-2 h-2 bg-white/20 rounded-full top-1/4 left-1/4 animate-pulse"></div>
+            <div class="absolute w-3 h-3 bg-himalaya-400/30 rounded-full top-1/3 right-1/3 animate-pulse" style="animation-delay: 1s;"></div>
+            <div class="absolute w-2 h-2 bg-peak-400/30 rounded-full bottom-1/4 left-1/3 animate-pulse" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40">
+            <div class="max-w-4xl">
+                <div class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-himalaya-300 text-sm font-medium mb-8">
+                    <span class="w-2 h-2 bg-himalaya-400 rounded-full mr-2 animate-pulse"></span>
+                    Now booking for Spring 2025
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight mb-6">
+                    Traverse
+                    <span class="block gradient-text">The Himalayas</span>
+                </h1>
+
+                <p class="text-xl lg:text-2xl text-slate-300 max-w-2xl mb-10 leading-relaxed">
+                    Expert-led adventures through the world's most majestic mountain ranges.
+                    From Everest Base Camp to hidden valleys — discover Nepal like never before.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 mb-16">
+                    <a href="{% url 'trips:trip_list' %}" class="px-8 py-4 bg-gradient-to-r from-himalaya-500 to-himalaya-600 text-white text-lg font-semibold rounded-full hover:shadow-xl hover:shadow-himalaya-500/30 transform hover:-translate-y-1 transition-all text-center">
+                        Explore Trips
+                    </a>
+                    <a href="{% url 'content:post_list' %}" class="px-8 py-4 bg-white/10 backdrop-blur-sm text-white text-lg font-semibold rounded-full hover:bg-white/20 transition-colors text-center border border-white/20">
+                        Read Our Guides
+                    </a>
+                </div>
+
+            <!-- Stats -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-bold text-white">15+</div>
+                        <div class="text-sm text-slate-400">Years Experience</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-bold text-white">500+</div>
+                        <div class="text-sm text-slate-400">Happy Trekkers</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-bold text-white">50+</div>
+                        <div class="text-sm text-slate-400">Unique Routes</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-bold text-white">100%</div>
+                        <div class="text-sm text-slate-400">Safety Record</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+        </div>
+    </section>
+
+<!-- Featured Trips Section -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
+                    Featured <span class="gradient-text">Adventures</span>
+                </h2>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                    Handpicked expeditions for unforgettable Himalayan experiences
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for trip in featured_trips %}
+                    <article class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl card-hover border border-slate-100">
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            {% if trip.featured_image %}
+                                <img src="{{ trip.featured_image.url }}" alt="{{ trip.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            {% else %}
+                                <div class="w-full h-full bg-gradient-to-br from-himalaya-100 to-peak-100 flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-himalaya-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3l14 9-14 9V3z"/>
+                                    </svg>
+                                </div>
+                            {% endif %}
+
+                            <div class="absolute top-4 left-4">
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full
+                                             {% if trip.difficulty == 'easy' %}bg-green-100 text-green-700
+                                             {% elif trip.difficulty == 'moderate' %}bg-yellow-100 text-yellow-700
+                                             {% elif trip.difficulty == 'challenging' %}bg-orange-100 text-orange-700
+                                             {% else %}bg-red-100 text-red-700{% endif %}">
+                                    {{ trip.get_difficulty_display }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4 text-xs text-slate-500 mb-3">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    {{ trip.duration_days }} days
+                                </span>
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/>
+                                    </svg>
+                                    {{ trip.max_altitude }}m
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 group-hover:text-himalaya-600 mb-2">
+                                <a href="{{ trip.get_absolute_url }}">{{ trip.title }}</a>
+                            </h3>
+
+                            <p class="text-sm text-slate-600 mb-4 line-clamp-2">{{ trip.tagline|default:trip.overview|truncatewords:15 }}</p>
+
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                <div>
+                                    {% if trip.discounted_price %}
+                                        <span class="text-sm text-slate-400 line-through">${{ trip.price }}</span>
+                                        <span class="text-xl font-bold text-himalaya-600">${{ trip.discounted_price }}</span>
+                                    {% else %}
+                                        <span class="text-xl font-bold text-himalaya-600">${{ trip.price }}</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ trip.get_absolute_url }}" class="text-sm font-medium text-himalaya-600 hover:text-himalaya-700">
+                                    View Details →
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="col-span-full text-center py-16 bg-slate-50 rounded-2xl">
+                        <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                        </svg>
+                        <p class="text-slate-500">Featured trips coming soon.</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="{% url 'trips:trip_list' %}" class="inline-flex items-center px-6 py-3 bg-slate-900 text-white font-semibold rounded-full hover:bg-slate-800 transition-colors">
+                    View All Trips
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+<!-- Featured Tags Section -->
+    {% if featured_tags %}
+        <section class="py-24 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
+                        Explore by <span class="gradient-text">Interest</span>
+                    </h2>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                        Find your perfect adventure based on what excites you most
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {% for tag in featured_tags %}
+                        <a href="{{ tag.get_absolute_url }}" class="group p-6 bg-white rounded-2xl border border-slate-100 hover:border-himalaya-200 hover:shadow-lg transition-all text-center">
+                            <div class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-himalaya-100 to-peak-100 text-himalaya-600 rounded-xl mb-4 group-hover:scale-110 transition-transform">
+                                {% if tag.slug == 'everest' %}
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/></svg>
+                                {% elif tag.slug == 'annapurna' %}
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/></svg>
+                                {% elif tag.slug == 'peak-climbing' %}
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21l9-9 4 4 5-5m0 0v4m0-4h-4"/></svg>
+                                {% elif tag.slug == 'beginner' %}
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                {% elif tag.slug == 'teahouse' %}
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                {% elif tag.slug == 'winter' %}
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v18m0-18l-4 4m4-4l4 4m-4 14l-4-4m4 4l4-4M3 12h18M3 12l4-4m-4 4l4 4m14-4l-4-4m4 4l-4 4"/></svg>
+                                {% else %}
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                                {% endif %}
+                            </div>
+                            <h3 class="text-lg font-semibold text-slate-900 group-hover:text-himalaya-600">{{ tag.name }}</h3>
+                            <p class="text-sm text-slate-500 mt-1">{{ tag.get_trip_count }} trips</p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+<!-- Latest Blog Posts -->
+    {% if latest_posts %}
+        <section class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-end justify-between mb-12">
+                    <div>
+                        <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
+                            Travel <span class="gradient-text">Guides</span>
+                        </h2>
+                        <p class="text-lg text-slate-600">
+                            Expert tips, stories, and insights from our team
+                        </p>
+                    </div>
+                    <a href="{% url 'content:post_list' %}" class="hidden md:flex items-center text-himalaya-600 font-medium hover:text-himalaya-700">
+                        View all articles
+                        <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    {% for post in latest_posts %}
+                        <article class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl card-hover border border-slate-100">
+                            <div class="aspect-video overflow-hidden">
+                                {% if post.featured_image %}
+                                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                {% else %}
+                                    <div class="w-full h-full bg-gradient-to-br from-peak-100 to-himalaya-100"></div>
+                                {% endif %}
+                            </div>
+
+                            <div class="p-6">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <span class="px-2.5 py-0.5 text-xs font-medium bg-peak-100 text-peak-700 rounded-full">
+                                        {{ post.get_content_type_display }}
+                                    </span>
+                                    <span class="text-xs text-slate-400">
+                                        {{ post.read_time_minutes }} min read
+                                    </span>
+                                </div>
+
+                                <h3 class="text-lg font-bold text-slate-900 group-hover:text-himalaya-600 mb-2 line-clamp-2">
+                                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                                </h3>
+
+                                <p class="text-sm text-slate-600 line-clamp-2 mb-4">{{ post.excerpt }}</p>
+
+                                {% if post.author %}
+                                    <div class="flex items-center pt-4 border-t border-slate-100">
+                                        {% if post.author.photo %}
+                                            <img src="{{ post.author.photo.url }}" alt="{{ post.author.name }}" class="w-8 h-8 rounded-full object-cover mr-3">
+                                        {% endif %}
+                                        <span class="text-sm font-medium text-slate-700">{{ post.author.name }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <div class="text-center mt-12 md:hidden">
+                    <a href="{% url 'content:post_list' %}" class="inline-flex items-center px-6 py-3 bg-slate-900 text-white font-semibold rounded-full">
+                        View All Articles
+                    </a>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+<!-- Testimonials Section -->
+    <section class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
+                    What Our <span class="gradient-text">Trekkers</span> Say
+                </h2>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                    Real stories from adventurers who've explored the Himalayas with us
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+            <!-- Review 1 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 relative">
+                    <div class="absolute -top-4 left-8">
+                        <span class="text-6xl text-himalaya-200">"</span>
+                    </div>
+                    <div class="flex items-center gap-1 mb-4 mt-4">
+                        {% for i in "12345" %}
+                            <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                            </svg>
+                        {% endfor %}
+                    </div>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        "The Everest Base Camp trek was life-changing. The guides were incredibly knowledgeable and made sure everyone was safe and having fun. Best decision I ever made!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-himalaya-400 to-peak-500 flex items-center justify-center text-white font-bold mr-4">
+                            JM
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900">James Mitchell</p>
+                            <p class="text-sm text-slate-500">United Kingdom • EBC Trek 2024</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Review 2 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 relative">
+                    <div class="absolute -top-4 left-8">
+                        <span class="text-6xl text-himalaya-200">"</span>
+                    </div>
+                    <div class="flex items-center gap-1 mb-4 mt-4">
+                        {% for i in "12345" %}
+                            <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                            </svg>
+                        {% endfor %}
+                    </div>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        "The Annapurna Circuit exceeded all expectations. Perfect organization, amazing food, and views that will stay with me forever. Already planning my next trip!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-peak-400 to-himalaya-500 flex items-center justify-center text-white font-bold mr-4">
+                            SK
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900">Sarah Kim</p>
+                            <p class="text-sm text-slate-500">Canada • Annapurna Circuit 2024</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Review 3 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 relative">
+                    <div class="absolute -top-4 left-8">
+                        <span class="text-6xl text-himalaya-200">"</span>
+                    </div>
+                    <div class="flex items-center gap-1 mb-4 mt-4">
+                        {% for i in "12345" %}
+                            <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                            </svg>
+                        {% endfor %}
+                    </div>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        "Our helicopter tour to Everest was absolutely breathtaking. Professional pilots, smooth operation, and memories that will last a lifetime. Highly recommend!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-himalaya-500 to-peak-400 flex items-center justify-center text-white font-bold mr-4">
+                            MP
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-900">Michael Peters</p>
+                            <p class="text-sm text-slate-500">Germany • Heli Tour 2024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Trust Badges -->
+            <div class="flex flex-wrap justify-center gap-8 mt-12 pt-12 border-t border-slate-200">
+                <div class="flex items-center gap-2">
+                    <svg class="w-8 h-8 text-himalaya-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    <span class="font-semibold text-slate-700">Licensed & Insured</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-8 h-8 text-himalaya-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                    </svg>
+                    <span class="font-semibold text-slate-700">4.9★ on TripAdvisor</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-8 h-8 text-himalaya-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="font-semibold text-slate-700">500+ Happy Trekkers</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Partners Marquee Section -->
+    <section class="py-16 bg-white overflow-hidden">
+        <div class="text-center mb-10">
+            <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Trusted By Leading Travel Organizations</p>
+        </div>
+
+    <!-- Auto-scrolling Marquee -->
+        <div class="relative">
+        <!-- Gradient Masks -->
+            <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10"></div>
+            <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10"></div>
+
+        <!-- Scrolling Container -->
+            <div class="flex animate-marquee">
+            <!-- First Set of Logos -->
+                <div class="flex items-center gap-16 px-8">
+                <!-- TripAdvisor -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">TripAdvisor</span>
+                    </div>
+
+                <!-- Nepal Tourism Board -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                            <span class="text-red-600 font-bold text-lg">NTB</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Nepal Tourism Board</span>
+                    </div>
+
+                <!-- TAAN -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <span class="text-blue-600 font-bold text-lg">TAAN</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Trekking Agencies' Association</span>
+                    </div>
+
+                <!-- Lonely Planet -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <span class="text-blue-800 font-bold text-lg">LP</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Lonely Planet</span>
+                    </div>
+
+                <!-- NMA -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                            <span class="text-orange-600 font-bold text-lg">NMA</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Nepal Mountaineering Assoc.</span>
+                    </div>
+
+                <!-- Viator -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center">
+                            <span class="text-teal-600 font-bold text-lg">V</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Viator</span>
+                    </div>
+                </div>
+
+            <!-- Duplicate Set for Seamless Loop -->
+                <div class="flex items-center gap-16 px-8">
+                <!-- TripAdvisor -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">TripAdvisor</span>
+                    </div>
+
+                <!-- Nepal Tourism Board -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                            <span class="text-red-600 font-bold text-lg">NTB</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Nepal Tourism Board</span>
+                    </div>
+
+                <!-- TAAN -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <span class="text-blue-600 font-bold text-lg">TAAN</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Trekking Agencies' Association</span>
+                    </div>
+
+                <!-- Lonely Planet -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <span class="text-blue-800 font-bold text-lg">LP</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Lonely Planet</span>
+                    </div>
+
+                <!-- NMA -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                            <span class="text-orange-600 font-bold text-lg">NMA</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Nepal Mountaineering Assoc.</span>
+                    </div>
+
+                <!-- Viator -->
+                    <div class="flex-shrink-0 flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100">
+                        <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center">
+                            <span class="text-teal-600 font-bold text-lg">V</span>
+                        </div>
+                        <span class="font-semibold text-slate-700 whitespace-nowrap">Viator</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- CTA Section -->
+    <section class="py-24 bg-gradient-to-br from-himalaya-600 to-peak-700">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl lg:text-4xl font-bold text-white mb-6">
+                Ready for Your Himalayan Adventure?
+            </h2>
+            <p class="text-xl text-himalaya-100 mb-10 max-w-2xl mx-auto">
+                Let our expert team help you plan the trip of a lifetime.
+                From route planning to gear advice, we've got you covered.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'core:contact' %}" class="px-8 py-4 bg-white text-himalaya-600 text-lg font-semibold rounded-full hover:bg-himalaya-50 transition-colors">
+                    Get in Touch
+                </a>
+                <a href="{% url 'trips:trip_list' %}" class="px-8 py-4 bg-transparent text-white text-lg font-semibold rounded-full border-2 border-white/30 hover:bg-white/10 transition-colors">
+                    Browse All Trips
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+/* Marquee Animation */
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 30s linear infinite;
+        }
+
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+    </style>
+{% endblock %}

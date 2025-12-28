@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Travel Guides & Articles | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mb-12">
+                <h1 class="text-4xl font-bold text-slate-900 mb-4">
+                    Travel <span class="gradient-text">Guides</span>
+                </h1>
+                <p class="text-lg text-slate-600">
+                    Expert tips, stories, and insights from our experienced team.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for post in posts %}
+                    <article class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl card-hover border border-slate-100">
+                        <div class="aspect-video overflow-hidden">
+                            {% if post.featured_image %}
+                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            {% else %}
+                                <div class="w-full h-full bg-gradient-to-br from-peak-100 to-himalaya-100"></div>
+                            {% endif %}
+                        </div>
+
+                        <div class="p-6">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <span class="px-2.5 py-0.5 text-xs font-medium bg-peak-100 text-peak-700 rounded-full">
+                                    {{ post.get_content_type_display }}
+                                </span>
+                                <span class="text-xs text-slate-400">{{ post.read_time_minutes }} min read</span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 group-hover:text-himalaya-600 mb-2 line-clamp-2">
+                                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                            </h3>
+
+                            <p class="text-sm text-slate-600 line-clamp-2 mb-4">{{ post.excerpt }}</p>
+
+                            {% if post.author %}
+                                <div class="flex items-center pt-4 border-t border-slate-100">
+                                    {% if post.author.photo %}
+                                        <img src="{{ post.author.photo.url }}" alt="{{ post.author.name }}" class="w-8 h-8 rounded-full object-cover mr-3">
+                                    {% endif %}
+                                    <span class="text-sm font-medium text-slate-700">{{ post.author.name }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="col-span-full text-center py-16">
+                        <p class="text-slate-500">No articles yet. Check back soon!</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

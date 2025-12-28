@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ tag.meta_title|default:tag.name }} | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <div class="min-h-screen">
+    <!-- Hero Section -->
+        <section class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-himalaya-950 py-20 lg:py-32">
+            <div class="absolute inset-0 opacity-20">
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-himalaya-500/20 via-transparent to-transparent"></div>
+            </div>
+
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                {% if tag.icon %}
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-himalaya-500 to-peak-600 rounded-2xl mb-8">
+                        <i class="{{ tag.icon }} text-3xl text-white"></i>
+                    </div>
+                {% endif %}
+
+                <h1 class="text-4xl lg:text-6xl font-bold text-white mb-6">
+                    {{ tag.name }}
+                </h1>
+
+                {% if tag.description %}
+                    <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                        {{ tag.description }}
+                    </p>
+                {% endif %}
+
+                <div class="flex items-center justify-center space-x-8 mt-10">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-himalaya-400">{{ content.trips.count }}</div>
+                        <div class="text-sm text-slate-400 uppercase tracking-wider">Trips</div>
+                    </div>
+                    <div class="w-px h-12 bg-slate-700"></div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-peak-400">{{ content.blogs.count }}</div>
+                        <div class="text-sm text-slate-400 uppercase tracking-wider">Guides</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- Content Grid -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+            <div class="grid lg:grid-cols-3 gap-8 lg:gap-12">
+
+            <!-- Main Content - Trips -->
+                <div class="lg:col-span-2 space-y-12">
+                <!-- Trips Section -->
+                    <div>
+                        <div class="flex items-center justify-between mb-8">
+                            <h2 class="text-2xl font-bold text-slate-900">
+                                <span class="gradient-text">{{ tag.name }}</span> Trips
+                            </h2>
+                            <a href="{% url 'trips:trip_list' %}?tag={{ tag.slug }}" class="text-sm font-medium text-himalaya-600 hover:text-himalaya-700 flex items-center space-x-1">
+                                <span>View all</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                        </div>
+
+                        {% if content.trips %}
+                            <div class="grid sm:grid-cols-2 gap-6">
+                                {% for trip in content.trips %}
+                                    <article class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl card-hover border border-slate-100">
+                                        <div class="relative aspect-[4/3] overflow-hidden">
+                                            {% if trip.featured_image %}
+                                                <img src="{{ trip.featured_image.url }}" alt="{{ trip.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            {% else %}
+                                                <div class="w-full h-full bg-gradient-to-br from-himalaya-100 to-peak-100 flex items-center justify-center">
+                                                    <svg class="w-16 h-16 text-himalaya-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                    </svg>
+                                                </div>
+                                            {% endif %}
+
+                                <!-- Difficulty Badge -->
+                                            <div class="absolute top-4 left-4">
+                                                <span class="px-3 py-1 text-xs font-semibold rounded-full
+                                                             {% if trip.difficulty == 'easy' %}bg-green-100 text-green-700
+                                                             {% elif trip.difficulty == 'moderate' %}bg-yellow-100 text-yellow-700
+                                                             {% elif trip.difficulty == 'challenging' %}bg-orange-100 text-orange-700
+                                                             {% else %}bg-red-100 text-red-700{% endif %}">
+                                                    {{ trip.get_difficulty_display }}
+                                                </span>
+                                            </div>
+
+                                <!-- Price Badge -->
+                                            {% if trip.discounted_price %}
+                                                <div class="absolute top-4 right-4">
+                                                    <span class="px-3 py-1 text-xs font-semibold bg-himalaya-500 text-white rounded-full">
+                                                        Save {{ trip.discount_percentage }}%
+                                                    </span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="p-6">
+                                            <div class="flex items-center space-x-4 text-xs text-slate-500 mb-3">
+                                                <span class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                    </svg>
+                                                    {{ trip.duration_days }} days
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/>
+                                                    </svg>
+                                                    {{ trip.max_altitude }}m
+                                                </span>
+                                            </div>
+
+                                            <h3 class="text-lg font-bold text-slate-900 group-hover:text-himalaya-600 mb-2 line-clamp-2">
+                                                <a href="{{ trip.get_absolute_url }}">{{ trip.title }}</a>
+                                            </h3>
+
+                                            <p class="text-sm text-slate-600 mb-4 line-clamp-2">{{ trip.tagline|default:trip.overview|truncatewords:20 }}</p>
+
+                                            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                                <div>
+                                                    {% if trip.discounted_price %}
+                                                        <span class="text-sm text-slate-400 line-through">${{ trip.price }}</span>
+                                                        <span class="text-xl font-bold text-himalaya-600">${{ trip.discounted_price }}</span>
+                                                    {% else %}
+                                                        <span class="text-xl font-bold text-himalaya-600">${{ trip.price }}</span>
+                                                    {% endif %}
+                                                    <span class="text-xs text-slate-500">/person</span>
+                                                </div>
+                                                <a href="{{ trip.get_absolute_url }}" class="text-sm font-medium text-himalaya-600 hover:text-himalaya-700">
+                                                    View Details →
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-12 bg-slate-50 rounded-2xl">
+                                <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                                </svg>
+                                <p class="text-slate-500">No trips available for this tag yet.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                <!-- Blog Section -->
+                    <div>
+                        <div class="flex items-center justify-between mb-8">
+                            <h2 class="text-2xl font-bold text-slate-900">
+                                <span class="gradient-text">{{ tag.name }}</span> Guides
+                            </h2>
+                            <a href="{% url 'content:post_list' %}?tag={{ tag.slug }}" class="text-sm font-medium text-himalaya-600 hover:text-himalaya-700 flex items-center space-x-1">
+                                <span>View all</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                        </div>
+
+                        {% if content.blogs %}
+                            <div class="space-y-6">
+                                {% for post in content.blogs %}
+                                    <article class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg card-hover border border-slate-100 flex flex-col sm:flex-row">
+                                        <div class="sm:w-1/3 aspect-video sm:aspect-square overflow-hidden flex-shrink-0">
+                                            {% if post.featured_image %}
+                                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            {% else %}
+                                                <div class="w-full h-full bg-gradient-to-br from-peak-100 to-himalaya-100 flex items-center justify-center">
+                                                    <svg class="w-12 h-12 text-peak-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                                    </svg>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="p-6 flex flex-col justify-between flex-grow">
+                                            <div>
+                                                <div class="flex items-center space-x-3 mb-3">
+                                                    <span class="px-2.5 py-0.5 text-xs font-medium bg-peak-100 text-peak-700 rounded-full">
+                                                        {{ post.get_content_type_display }}
+                                                    </span>
+                                                    <span class="text-xs text-slate-400">
+                                                        {{ post.read_time_minutes }} min read
+                                                    </span>
+                                                </div>
+
+                                                <h3 class="text-lg font-bold text-slate-900 group-hover:text-himalaya-600 mb-2 line-clamp-2">
+                                                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                                                </h3>
+
+                                                <p class="text-sm text-slate-600 line-clamp-2">{{ post.excerpt }}</p>
+                                            </div>
+
+                                            {% if post.author %}
+                                                <div class="flex items-center mt-4 pt-4 border-t border-slate-100">
+                                                    {% if post.author.photo %}
+                                                        <img src="{{ post.author.photo.url }}" alt="{{ post.author.name }}" class="w-8 h-8 rounded-full object-cover mr-3">
+                                                    {% endif %}
+                                                    <div>
+                                                        <p class="text-sm font-medium text-slate-900">{{ post.author.name }}</p>
+                                                        {% if post.author.is_verified_expert %}
+                                                            <p class="text-xs text-himalaya-600 flex items-center">
+                                                                <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                                </svg>
+                                                                Verified Expert
+                                                            </p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-12 bg-slate-50 rounded-2xl">
+                                <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                                <p class="text-slate-500">No guides available for this tag yet.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            <!-- Sidebar -->
+                <aside class="lg:col-span-1 space-y-8">
+                <!-- Related Tags -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Related Topics</h3>
+                        <div class="flex flex-wrap gap-2">
+                            {% for related_tag in related_tags %}
+                                <a href="{{ related_tag.get_absolute_url }}" class="px-3 py-1.5 text-sm font-medium bg-slate-100 text-slate-700 hover:bg-himalaya-100 hover:text-himalaya-700 rounded-full transition-colors">
+                                    {{ related_tag.name }}
+                                </a>
+                            {% empty %}
+                                <p class="text-sm text-slate-500">No related topics.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                <!-- Newsletter CTA -->
+                    <div class="bg-gradient-to-br from-himalaya-500 to-peak-600 rounded-2xl p-6 text-white">
+                        <h3 class="text-lg font-bold mb-2">Get Travel Updates</h3>
+                        <p class="text-sm text-himalaya-100 mb-4">Subscribe for expert tips, exclusive deals, and inspiration for your next adventure.</p>
+                        <form class="space-y-3">
+                            <input type="email" placeholder="Your email address" class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-himalaya-200 focus:outline-none focus:ring-2 focus:ring-white/50">
+                            <button type="submit" class="w-full px-4 py-2.5 bg-white text-himalaya-600 font-semibold rounded-lg hover:bg-himalaya-50 transition-colors">
+                                Subscribe
+                            </button>
+                        </form>
+                    </div>
+
+                <!-- Need Help CTA -->
+                    <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">Need Help Planning?</h3>
+                        <p class="text-sm text-slate-600 mb-4">Our expert team is ready to help you plan your perfect Himalayan adventure.</p>
+                        <a href="{% url 'core:contact' %}" class="block w-full text-center px-4 py-2.5 bg-slate-900 text-white font-semibold rounded-lg hover:bg-slate-800 transition-colors">
+                            Contact Us
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </div>
+{% endblock %}

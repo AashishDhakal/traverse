@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Team | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h1 class="text-4xl font-bold text-slate-900 mb-4">
+                    Meet Our <span class="gradient-text">Expert Team</span>
+                </h1>
+                <p class="text-lg text-slate-600">
+                    Experienced guides and passionate adventurers dedicated to making your Himalayan journey unforgettable.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for member in members %}
+                    <a href="{{ member.get_absolute_url }}" class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl card-hover border border-slate-100 text-center">
+                        <div class="aspect-square overflow-hidden">
+                            {% if member.photo %}
+                                <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            {% else %}
+                                <div class="w-full h-full bg-gradient-to-br from-himalaya-100 to-peak-100 flex items-center justify-center">
+                                    <span class="text-6xl text-himalaya-300">{{ member.name|slice:":1" }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-slate-900 group-hover:text-himalaya-600">{{ member.name }}</h3>
+                            <p class="text-himalaya-600 font-medium mb-2">{{ member.title|default:member.get_role_display }}</p>
+
+                            {% if member.is_verified_expert %}
+                                <span class="inline-flex items-center text-xs text-himalaya-600 bg-himalaya-50 px-2 py-1 rounded-full">
+                                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Verified Expert
+                                </span>
+                            {% endif %}
+
+                            <p class="text-sm text-slate-600 mt-3 line-clamp-2">{{ member.short_bio|default:member.bio|truncatewords:20 }}</p>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="col-span-full text-center py-16">
+                        <p class="text-slate-500">No team members yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

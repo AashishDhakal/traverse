@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Destinations | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mb-12">
+                <h1 class="text-4xl font-bold text-slate-900 mb-4">
+                    Explore <span class="gradient-text">Destinations</span>
+                </h1>
+                <p class="text-lg text-slate-600">
+                    Discover the diverse regions of the Himalayas.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for region in regions %}
+                    <a href="{{ region.get_absolute_url }}" class="group relative aspect-[4/3] rounded-2xl overflow-hidden">
+                        {% if region.featured_image %}
+                            <img src="{{ region.featured_image.url }}" alt="{{ region.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% else %}
+                            <div class="w-full h-full bg-gradient-to-br from-himalaya-500 to-peak-600"></div>
+                        {% endif %}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-6">
+                            <h3 class="text-xl font-bold text-white mb-1">{{ region.name }}</h3>
+                            <p class="text-sm text-white/80">{{ region.trips.count }} trips available</p>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="col-span-full text-center py-16">
+                        <p class="text-slate-500">No destinations yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

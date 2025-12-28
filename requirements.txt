@@ -1,0 +1,22 @@
+# Core
+Django>=5.0,<6.0
+django-environ>=0.11.2
+psycopg2-binary>=2.9.9
+
+# Rich Text
+django-ckeditor-5>=0.2.10
+
+# Performance
+django-compressor>=4.4
+whitenoise>=6.6.0
+redis>=5.0.1
+django-redis>=5.4.0
+
+# SEO
+django-meta>=2.4.1
+
+# Development
+django-debug-toolbar>=4.2.0
+
+# Image handling
+Pillow>=10.1.0

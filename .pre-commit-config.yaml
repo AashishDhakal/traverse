@@ -1,0 +1,47 @@
+# Pre-commit configuration for Traverse The Himalayas
+# See https://pre-commit.com for more information
+
+repos:
+  # General hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: debug-statements
+
+  # Python code formatting with Ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.9
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  # Django specific checks
+  - repo: https://github.com/rtts/djhtml
+    rev: 3.0.6
+    hooks:
+      - id: djhtml
+        args: [--tabwidth=4]
+      - id: djcss
+      - id: djjs
+
+  # Security checks
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        args: ['-c', 'pyproject.toml']
+        additional_dependencies: ['bandit[toml]']
+        exclude: tests/
+
+# Configuration
+default_language_version:
+  python: python3.9

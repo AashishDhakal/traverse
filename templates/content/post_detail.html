@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.meta_title|default:post.title }} | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <article class="py-12">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+            <header class="mb-8">
+                <span class="inline-block px-3 py-1 text-sm font-medium bg-peak-100 text-peak-700 rounded-full mb-4">
+                    {{ post.get_content_type_display }}
+                </span>
+                <h1 class="text-4xl font-bold text-slate-900 mb-4">{{ post.title }}</h1>
+                <p class="text-xl text-slate-600 mb-6">{{ post.excerpt }}</p>
+
+                {% if post.author %}
+                    <div class="flex items-center">
+                        {% if post.author.photo %}
+                            <img src="{{ post.author.photo.url }}" alt="{{ post.author.name }}" class="w-12 h-12 rounded-full object-cover mr-4">
+                        {% endif %}
+                        <div>
+                            <a href="{{ post.author.get_absolute_url }}" class="font-semibold text-slate-900 hover:text-himalaya-600">{{ post.author.name }}</a>
+                            {% if post.author.is_verified_expert %}
+                                <span class="inline-flex items-center text-xs text-himalaya-600 ml-2">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Verified Expert
+                                </span>
+                            {% endif %}
+                            <p class="text-sm text-slate-500">{{ post.published_at|date:"F j, Y" }} · {{ post.read_time_minutes }} min read</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </header>
+
+        <!-- Featured Image -->
+            {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full rounded-2xl mb-8">
+            {% endif %}
+
+        <!-- Content -->
+            <div class="prose prose-lg prose-slate max-w-none mb-12">
+                {{ post.content|safe }}
+            </div>
+
+        <!-- Tags -->
+            {% if post.related_tags.exists %}
+                <div class="flex flex-wrap gap-2 mb-12 pt-8 border-t border-slate-200">
+                    {% for tag in post.related_tags.all %}
+                        <a href="{{ tag.get_absolute_url }}" class="px-3 py-1.5 text-sm font-medium bg-slate-100 text-slate-700 hover:bg-himalaya-100 hover:text-himalaya-700 rounded-full">
+                            {{ tag.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        <!-- Recommended Trips -->
+            {% if recommended_trips %}
+                <div class="bg-slate-50 rounded-2xl p-8 mb-12">
+                    <h3 class="text-xl font-bold text-slate-900 mb-6">Recommended Trips</h3>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        {% for trip in recommended_trips %}
+                            <a href="{{ trip.get_absolute_url }}" class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                <div class="aspect-video overflow-hidden">
+                                    {% if trip.featured_image %}
+                                        <img src="{{ trip.featured_image.url }}" alt="{{ trip.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                                    {% endif %}
+                                </div>
+                                <div class="p-4">
+                                    <h4 class="font-semibold text-slate-900 group-hover:text-himalaya-600 text-sm">{{ trip.title }}</h4>
+                                    <p class="text-xs text-slate-500">${{ trip.current_price }}</p>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </article>
+{% endblock %}

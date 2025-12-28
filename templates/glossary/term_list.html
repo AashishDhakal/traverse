@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Trekking Glossary | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h1 class="text-4xl font-bold text-slate-900 mb-4">
+                    Trekking <span class="gradient-text">Glossary</span>
+                </h1>
+                <p class="text-lg text-slate-600">
+                    Essential terms every trekker should know before heading to the Himalayas.
+                </p>
+            </div>
+
+        <!-- Letter Navigation -->
+            <div class="flex flex-wrap gap-2 mb-8 pb-8 border-b border-slate-200">
+                {% for letter in letters %}
+                    <a href="#{{ letter }}" class="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 text-slate-700 hover:bg-himalaya-100 hover:text-himalaya-700 font-semibold transition-colors">
+                        {{ letter }}
+                    </a>
+                {% endfor %}
+            </div>
+
+        <!-- Terms by Letter -->
+            {% for letter, letter_terms in terms_by_letter.items %}
+                <div id="{{ letter }}" class="mb-10">
+                    <h2 class="text-2xl font-bold text-himalaya-600 mb-4">{{ letter }}</h2>
+                    <div class="space-y-4">
+                        {% for term in letter_terms %}
+                            <a href="{{ term.get_absolute_url }}" class="block p-4 bg-white rounded-xl border border-slate-100 hover:border-himalaya-200 hover:shadow-md transition-all group">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <h3 class="font-semibold text-slate-900 group-hover:text-himalaya-600">
+                                            {{ term.name }}
+                                            {% if term.abbreviation %}
+                                                <span class="text-slate-400 font-normal">({{ term.abbreviation }})</span>
+                                            {% endif %}
+                                        </h3>
+                                        <p class="text-sm text-slate-600 mt-1">{{ term.definition|truncatewords:25 }}</p>
+                                    </div>
+                                    <svg class="w-5 h-5 text-slate-400 group-hover:text-himalaya-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="text-center py-16">
+                    <p class="text-slate-500">No glossary terms yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

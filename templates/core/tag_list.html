@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Tags | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mb-12">
+                <h1 class="text-4xl font-bold text-slate-900 mb-4">
+                    Browse by <span class="gradient-text">Topic</span>
+                </h1>
+                <p class="text-lg text-slate-600">
+                    Explore our content organized by interests and themes.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {% for tag in tags %}
+                    <a href="{{ tag.get_absolute_url }}" class="group p-6 bg-white rounded-2xl border border-slate-100 hover:border-himalaya-200 hover:shadow-lg transition-all text-center">
+                        {% if tag.icon %}
+                            <div class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-himalaya-100 to-peak-100 text-himalaya-600 rounded-xl mb-4 group-hover:scale-110 transition-transform">
+                                <i class="{{ tag.icon }} text-2xl"></i>
+                            </div>
+                        {% endif %}
+                        <h3 class="text-lg font-semibold text-slate-900 group-hover:text-himalaya-600">{{ tag.name }}</h3>
+                        <p class="text-sm text-slate-500 mt-1">{{ tag.trip_count }} trips · {{ tag.blog_count }} guides</p>
+                    </a>
+                {% empty %}
+                    <div class="col-span-full text-center py-16">
+                        <p class="text-slate-500">No tags yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

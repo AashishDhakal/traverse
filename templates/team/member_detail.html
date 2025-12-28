@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ member.meta_title|default:member.name }} | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row gap-8 mb-12">
+                {% if member.photo %}
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="w-48 h-48 rounded-2xl object-cover">
+                {% endif %}
+
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ member.name }}</h1>
+                    <p class="text-xl text-himalaya-600 font-medium mb-3">{{ member.title|default:member.get_role_display }}</p>
+
+                    {% if member.is_verified_expert %}
+                        <span class="inline-flex items-center text-sm text-himalaya-600 bg-himalaya-50 px-3 py-1 rounded-full mb-4">
+                            <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            Verified Expert
+                        </span>
+                    {% endif %}
+
+                    <div class="flex gap-6 text-sm text-slate-600">
+                        {% if member.years_experience %}
+                            <span>{{ member.years_experience }}+ years experience</span>
+                        {% endif %}
+                        {% if member.trips_led %}
+                            <span>{{ member.trips_led }} trips led</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="prose prose-slate max-w-none mb-12">
+                <p>{{ member.bio }}</p>
+            </div>
+
+            {% if member.certifications %}
+                <div class="mb-12">
+                    <h2 class="text-xl font-bold text-slate-900 mb-4">Certifications</h2>
+                    <div class="flex flex-wrap gap-2">
+                        {% for cert in member.certifications %}
+                            <span class="px-3 py-1.5 text-sm bg-green-100 text-green-700 rounded-full">{{ cert }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if posts %}
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 mb-6">Articles by {{ member.name }}</h2>
+                    <div class="space-y-4">
+                        {% for post in posts %}
+                            <a href="{{ post.get_absolute_url }}" class="block p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                                <h3 class="font-semibold text-slate-900 hover:text-himalaya-600">{{ post.title }}</h3>
+                                <p class="text-sm text-slate-500">{{ post.published_at|date:"F j, Y" }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

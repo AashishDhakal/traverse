@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ term.meta_title|default:term.name }} | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="text-sm text-slate-500 mb-8">
+                <a href="{% url 'glossary:term_list' %}" class="hover:text-himalaya-600">Glossary</a>
+                <span class="mx-2">/</span>
+                <span class="text-slate-900">{{ term.name }}</span>
+            </nav>
+
+            <h1 class="text-4xl font-bold text-slate-900 mb-2">{{ term.name }}</h1>
+            {% if term.abbreviation %}
+                <p class="text-xl text-himalaya-600 font-medium mb-6">{{ term.abbreviation }}</p>
+            {% endif %}
+
+            <div class="bg-himalaya-50 border-l-4 border-himalaya-500 p-6 rounded-r-xl mb-8">
+                <p class="text-lg text-slate-700">{{ term.definition }}</p>
+            </div>
+
+            {% if term.detailed_explanation %}
+                <div class="prose prose-slate max-w-none mb-12">
+                    {{ term.detailed_explanation|safe }}
+                </div>
+            {% endif %}
+
+            {% if related_terms %}
+                <div class="mb-12">
+                    <h2 class="text-xl font-bold text-slate-900 mb-4">Related Terms</h2>
+                    <div class="flex flex-wrap gap-2">
+                        {% for related in related_terms %}
+                            <a href="{{ related.get_absolute_url }}" class="px-4 py-2 bg-slate-100 text-slate-700 hover:bg-himalaya-100 hover:text-himalaya-700 rounded-lg transition-colors">
+                                {{ related.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if related_trips %}
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 mb-4">Related Trips</h2>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        {% for trip in related_trips %}
+                            <a href="{{ trip.get_absolute_url }}" class="flex items-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                                {% if trip.featured_image %}
+                                    <img src="{{ trip.featured_image.url }}" alt="" class="w-16 h-16 rounded-lg object-cover mr-4">
+                                {% endif %}
+                                <div>
+                                    <h3 class="font-semibold text-slate-900">{{ trip.title }}</h3>
+                                    <p class="text-sm text-slate-500">${{ trip.current_price }}</p>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

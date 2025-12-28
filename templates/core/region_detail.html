@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ region.meta_title|default:region.name }} | Traverse The Himalayas{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold text-slate-900 mb-4">{{ region.name }}</h1>
+            {% if region.description %}
+                <p class="text-lg text-slate-600 max-w-3xl mb-12">{{ region.description }}</p>
+            {% endif %}
+
+            {% if trips %}
+                <h2 class="text-2xl font-bold text-slate-900 mb-6">Trips in {{ region.name }}</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for trip in trips %}
+                        <a href="{{ trip.get_absolute_url }}" class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg border border-slate-100">
+                            <div class="aspect-video overflow-hidden">
+                                {% if trip.featured_image %}
+                                    <img src="{{ trip.featured_image.url }}" alt="{{ trip.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                                {% endif %}
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-slate-900 group-hover:text-himalaya-600">{{ trip.title }}</h3>
+                                <p class="text-sm text-slate-500">{{ trip.duration_days }} days · ${{ trip.current_price }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
