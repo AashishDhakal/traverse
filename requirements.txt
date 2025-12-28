@@ -3,6 +3,7 @@ Django>=5.0,<6.0
 django-environ>=0.11.2
 psycopg2-binary>=2.9.9
 gunicorn>=21.2.0
+python-dotenv>=1.0.0
 
 # Admin
 django-unfold>=0.20.0
