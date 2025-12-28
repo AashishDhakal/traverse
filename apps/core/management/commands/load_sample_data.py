@@ -185,19 +185,14 @@ class Command(BaseCommand):
             },
         ]
 
-        for i, data in enumerate(sites_data):
+        # First, delete the default Django site if it exists with example.com domain
+        Site.objects.filter(domain="example.com").delete()
+
+        for data in sites_data:
             site, _ = Site.objects.update_or_create(
                 domain=data["domain"],
                 defaults={"name": data["name"]},
             )
-
-            # Set first site as default
-            if i == 0:
-                from django.conf import settings
-
-                Site.objects.filter(pk=settings.SITE_ID).exclude(pk=site.pk).delete()
-                site.pk = settings.SITE_ID
-                site.save()
 
             SiteConfiguration.objects.update_or_create(
                 site=site,
