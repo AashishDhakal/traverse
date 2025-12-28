@@ -3,6 +3,10 @@ Load sample data for Traverse The Himalayas.
 
 Usage: python manage.py load_sample_data
 """
+import shutil
+from pathlib import Path
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -16,6 +20,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write("Loading sample data...")
 
+        self._copy_sample_images()
         self._create_tags()
         self._create_regions()
         self._create_team_members()
@@ -24,6 +29,31 @@ class Command(BaseCommand):
         self._create_glossary_terms()
 
         self.stdout.write(self.style.SUCCESS("✓ Sample data loaded successfully!"))
+
+    def _copy_sample_images(self):
+        """Copy sample images from static/sample to media folders."""
+        static_sample = Path(settings.BASE_DIR) / "static" / "sample"
+        media_root = Path(settings.MEDIA_ROOT)
+
+        # Copy trip images
+        trips_src = static_sample / "trips"
+        trips_dest = media_root / "trips" / "featured"
+        trips_dest.mkdir(parents=True, exist_ok=True)
+
+        if trips_src.exists():
+            for img in trips_src.glob("*.png"):
+                shutil.copy2(img, trips_dest / img.name)
+            self.stdout.write(f"  Copied {len(list(trips_src.glob('*.png')))} trip images")
+
+        # Copy blog images
+        blog_src = static_sample / "blog"
+        blog_dest = media_root / "blog" / "featured"
+        blog_dest.mkdir(parents=True, exist_ok=True)
+
+        if blog_src.exists():
+            for img in blog_src.glob("*.png"):
+                shutil.copy2(img, blog_dest / img.name)
+            self.stdout.write(f"  Copied {len(list(blog_src.glob('*.png')))} blog images")
 
     def _create_tags(self):
         from apps.core.models import UniversalTag
@@ -280,7 +310,18 @@ class Command(BaseCommand):
             tags = UniversalTag.objects.filter(slug__in=tag_slugs)
             trip.tags.set(tags)
 
-        self.stdout.write(f"  Created {len(trips_data)} trips")
+        # Assign featured images (from media folder)
+        trip_images = {
+            "everest-base-camp-trek": "trips/featured/everest_base_camp.png",
+            "annapurna-circuit": "trips/featured/annapurna_circuit.png",
+            "poon-hill-trek": "trips/featured/poon_hill.png",
+            "langtang-valley-trek": "trips/featured/langtang_valley.png",
+            "island-peak-climbing": "trips/featured/island_peak.png",
+        }
+        for slug, img_path in trip_images.items():
+            Trip.objects.filter(slug=slug).update(featured_image=img_path)
+
+        self.stdout.write(f"  Created {len(trips_data)} trips with images")
 
     def _create_blog_posts(self):
         from apps.content.models import BlogPost
@@ -350,7 +391,17 @@ class Command(BaseCommand):
             trips = Trip.objects.filter(slug__in=linked_trip_slugs)
             post.linked_trips.set(trips)
 
-        self.stdout.write(f"  Created {len(posts_data)} blog posts")
+        # Assign featured images to blog posts
+        blog_images = {
+            "everest-base-camp-packing-list-2025": "blog/featured/packing_list.png",
+            "best-time-trek-nepal-complete-guide": "blog/featured/seasons.png",
+            "altitude-sickness-prevention-treatment": "blog/featured/packing_list.png",
+            "sherpa-culture-more-than-guides": "blog/featured/seasons.png",
+        }
+        for slug, img_path in blog_images.items():
+            BlogPost.objects.filter(slug=slug).update(featured_image=img_path)
+
+        self.stdout.write(f"  Created {len(posts_data)} blog posts with images")
 
     def _create_glossary_terms(self):
         from apps.glossary.models import Term

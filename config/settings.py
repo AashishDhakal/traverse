@@ -129,7 +129,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = os.environ.get("STATIC_ROOT", BASE_DIR / "staticfiles")
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # WhiteNoise for static files (production only)
@@ -148,7 +148,7 @@ COMPRESS_ENABLED = True
 # Media files (uploads)
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT", BASE_DIR / "media")
 
 
 # Default primary key field type
