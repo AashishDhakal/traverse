@@ -1,8 +1,4 @@
-
-# This workflows will upload a Python Package using Twine when a release is created
-# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
-
-name: Upload Python Package
+name: Deploy to Production
 
 on:
   push:
@@ -10,22 +6,31 @@ on:
       - main
 
 jobs:
-  build:
-
+  deploy:
     runs-on: self-hosted
 
+    env:
+      STATIC_ROOT: /var/www/traverse/static
+      MEDIA_ROOT: /var/www/traverse/media
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Perform venv actions
-      run: cp .env _work/traverse/traverse
-           && source venv/bin/activate
-           && cd /root/actions-runner-traverse/_work/traverse/traverse
-           && pip install -r requirements.txt
-           && python manage.py migrate
+    - uses: actions/checkout@v4
+
+    - name: Deploy application
+      run: |
+        cp .env /root/actions-runner-traverse/_work/traverse/traverse/
+        source venv/bin/activate
+        cd /root/actions-runner-traverse/_work/traverse/traverse
+        pip install -r requirements.txt
+        python manage.py migrate
+        python manage.py collectstatic --noinput
       working-directory: /root/actions-runner-traverse
+
     - name: Restart gunicorn service
       run: sudo service traverse restart
+
     - name: Restart Celery workers
       run: sudo service celery-worker restart
-    - name: Restart Celery Services
+
+    - name: Restart Celery beat
       run: sudo service celery-beat restart
