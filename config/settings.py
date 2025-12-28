@@ -253,29 +253,44 @@ CKEDITOR_5_UPLOAD_PATH = "uploads/ckeditor/"
 # ============================================
 
 META_SITE_PROTOCOL = "https"
-META_SITE_DOMAIN = "summitx.com"  # Update for production
-META_SITE_NAME = "SummitX - Adventure Travel Nepal"
+META_SITE_DOMAIN = os.environ.get("SITE_DOMAIN", "example.com")
+META_SITE_NAME = os.environ.get("SITE_NAME", "Nepal Travel Portal")
 META_INCLUDE_KEYWORDS = ["nepal", "trekking", "himalaya", "adventure"]
 META_DEFAULT_KEYWORDS = ["nepal trekking", "himalayan adventure", "everest trek"]
 META_USE_OG_PROPERTIES = True
 META_USE_TWITTER_PROPERTIES = True
 META_USE_SCHEMAORG_PROPERTIES = True
-META_FB_APP_ID = ""  # Add Facebook App ID for analytics
-META_TWITTER_SITE = "@traversehimalaya"  # Twitter handle
+META_FB_APP_ID = os.environ.get("META_FB_APP_ID", "")
+META_TWITTER_SITE = os.environ.get("META_TWITTER_SITE", "")
 
 
 # ============================================
 # Django Unfold Admin Configuration
 # ============================================
 
+
+def get_site_title(request):
+    """Get site title dynamically from SiteConfiguration."""
+    if hasattr(request, "site_config") and request.site_config:
+        return request.site_config.brand_name
+    return "Nepal Travel Admin"
+
+
+def get_site_icon(request):
+    """Get site icon dynamically from SiteConfiguration."""
+    if hasattr(request, "site_config") and request.site_config and request.site_config.logo:
+        return request.site_config.logo.url
+    return "/static/images/logo.png"
+
+
 UNFOLD = {
-    "SITE_TITLE": "Traverse The Himalayas",
-    "SITE_HEADER": "Traverse The Himalayas",
+    "SITE_TITLE": get_site_title,
+    "SITE_HEADER": get_site_title,
     "SITE_SUBHEADER": "Content-Commerce Admin",
     "SITE_URL": "/",
     "SITE_ICON": {
-        "light": lambda request: "/static/images/logo.png",
-        "dark": lambda request: "/static/images/logo.png",
+        "light": get_site_icon,
+        "dark": get_site_icon,
     },
     "SITE_SYMBOL": "hiking",  # Material symbol
     "SHOW_HISTORY": True,
