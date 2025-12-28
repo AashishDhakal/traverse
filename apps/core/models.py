@@ -189,7 +189,21 @@ class SiteConfiguration(models.Model):
 
     # Footer
     footer_text = models.TextField(blank=True, help_text="Additional footer text/disclaimer")
+    footer_description = models.TextField(blank=True, help_text="Footer brand description (shown below logo)")
     copyright_name = models.CharField(max_length=100, blank=True, help_text="Copyright holder name")
+
+    # Hero Section
+    hero_title = models.CharField(max_length=100, blank=True, help_text="Homepage hero title (e.g., 'Discover Nepal')")
+    hero_subtitle = models.TextField(blank=True, help_text="Homepage hero subtitle/description")
+    hero_cta_text = models.CharField(
+        max_length=50, default="Explore Trips", help_text="Hero call-to-action button text"
+    )
+    hero_image = models.ImageField(upload_to="sites/hero/", blank=True, help_text="Homepage hero background")
+
+    # Page Titles
+    title_suffix = models.CharField(
+        max_length=50, blank=True, help_text="Suffix for page titles (e.g., ' | NepalLuxe')"
+    )
 
     # Analytics
     google_analytics_id = models.CharField(max_length=50, blank=True, help_text="GA4 Measurement ID")

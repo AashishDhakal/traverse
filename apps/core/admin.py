@@ -185,7 +185,25 @@ class SiteConfigurationAdmin(ModelAdmin):
         (
             "Footer",
             {
-                "fields": ["footer_text", "copyright_name"],
+                "fields": ["footer_text", "footer_description", "copyright_name"],
+                "classes": ["collapse"],
+            },
+        ),
+        (
+            "Hero Section",
+            {
+                "fields": [
+                    "hero_title",
+                    "hero_subtitle",
+                    "hero_cta_text",
+                    "hero_image",
+                ],
+            },
+        ),
+        (
+            "Page Titles",
+            {
+                "fields": ["title_suffix"],
                 "classes": ["collapse"],
             },
         ),
