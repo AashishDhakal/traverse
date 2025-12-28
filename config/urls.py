@@ -27,6 +27,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Admin site customization
-admin.site.site_header = "SummitX Administration"
-admin.site.site_title = "SummitX Admin"
-admin.site.index_title = "Content-Commerce Dashboard"
+admin.site.site_header = "Traverse Administration"
+admin.site.site_title = "Traverse Admin"
+admin.site.index_title = "Traverse Dashboard"

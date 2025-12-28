@@ -12,17 +12,17 @@ on:
 jobs:
   build:
 
-    runs-on: padhaisewa-prod
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v2
     - name: Perform venv actions
       run: cp .env _work/traverse/traverse
            && source venv/bin/activate
-           && cd /root/actions-runner/_work/traverse/traverse
+           && cd /root/actions-runner-traverse/_work/traverse/traverse
            && pip install -r requirements.txt
            && python manage.py migrate
-      working-directory: /root/actions-runner
+      working-directory: /root/actions-runner-traverse
     - name: Restart gunicorn service
       run: sudo service traverse restart
     - name: Restart Celery workers
