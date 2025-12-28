@@ -23,6 +23,9 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
+# Django Sites Framework
+SITE_ID = int(os.environ.get("SITE_ID", 1))
+
 
 # Application definition
 
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",  # For dynamic sitemaps
+    "django.contrib.sites",  # Multi-site support
     # Third-party
     "compressor",
     "meta",
@@ -59,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.core.middleware.SiteConfigurationMiddleware",  # Multi-site branding
     # 'apps.glossary.middleware.GlossaryAutoLinkerMiddleware',  # Enable when ready
 ]
 
@@ -75,6 +80,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.core.context_processors.site_config",  # Multi-site branding
             ],
         },
     },

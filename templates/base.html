@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Traverse The Himalayas{% endblock %}</title>
+        <title>{% block title %}{{ brand_name|default:"Traverse The Himalayas" }}{% endblock %}</title>
 
     <!-- SEO Meta -->
         {% load meta %}
@@ -135,10 +135,13 @@
                 <div class="flex justify-between items-center h-16 lg:h-20">
                 <!-- Logo -->
                     <a href="{% url 'core:home' %}" class="flex items-center space-x-1">
-                        <img src="/static/images/logo.png" alt="Traverse The Himalayas" class="w-20 h-20 -my-4 object-contain">
+                        {% if site_config and site_config.logo %}
+                            <img src="{{ site_config.logo.url }}" alt="{{ brand_name }}" class="w-20 h-20 -my-4 object-contain">
+                        {% else %}
+                            <img src="/static/images/logo.png" alt="{{ brand_name }}" class="w-20 h-20 -my-4 object-contain">
+                        {% endif %}
                         <div class="hidden sm:block">
-                            <span class="text-xl font-bold text-slate-900">Traverse</span>
-                            <span class="text-xl font-light text-himalaya-600"> The Himalayas</span>
+                            <span class="text-xl font-bold text-slate-900">{{ brand_name|default:"Traverse The Himalayas" }}</span>
                         </div>
                     </a>
 
@@ -216,12 +219,15 @@
                 <!-- Brand -->
                     <div class="lg:col-span-1">
                         <div class="flex items-center space-x-3 mb-6">
-                            <img src="/static/images/logo.png" alt="Traverse The Himalayas" class="w-14 h-14 rounded-xl object-contain">
-                            <span class="text-xl font-bold">Traverse The Himalayas</span>
+                            {% if site_config and site_config.logo %}
+                                <img src="{{ site_config.logo.url }}" alt="{{ brand_name }}" class="w-14 h-14 rounded-xl object-contain">
+                            {% else %}
+                                <img src="/static/images/logo.png" alt="{{ brand_name }}" class="w-14 h-14 rounded-xl object-contain">
+                            {% endif %}
+                            <span class="text-xl font-bold">{{ brand_name|default:"Traverse The Himalayas" }}</span>
                         </div>
                         <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                            Expert-led adventures through the world's most majestic mountain ranges.
-                            Experience Nepal like never before.
+                            {{ tagline|default:"Expert-led adventures through the world's most majestic mountain ranges. Experience Nepal like never before." }}
                         </p>
                         <div class="flex space-x-4">
                             <a href="#" class="w-10 h-10 bg-slate-800 hover:bg-himalaya-600 rounded-lg flex items-center justify-center transition-colors">
@@ -288,7 +294,7 @@
                 <div class="border-t border-slate-800 mt-12 pt-8">
                     <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <p class="text-slate-500 text-sm">
-                            &copy; {% now "Y" %} Traverse The Himalayas. All rights reserved.
+                            &copy; {% now "Y" %} {{ site_config.copyright_name|default:brand_name|default:"Traverse The Himalayas" }}. All rights reserved.
                         </p>
                         <div class="flex space-x-6 text-sm text-slate-500">
                             <a href="#" class="hover:text-himalaya-400 transition-colors">Privacy Policy</a>

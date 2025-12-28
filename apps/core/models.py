@@ -130,3 +130,92 @@ class Region(models.Model):
 
         region_ids = [self.id] + [r.id for r in self.get_descendants()]
         return Trip.objects.filter(region_id__in=region_ids, is_published=True)
+
+
+class SiteConfiguration(models.Model):
+    """
+    Per-site branding and configuration for multi-portal support.
+
+    Allows running multiple travel portals from a single codebase:
+    - Traverse The Himalayas
+    - VisitNepalDirect
+    - NepalLuxe
+    - BudgetHimalaya
+    """
+
+    site = models.OneToOneField(
+        "sites.Site",
+        on_delete=models.CASCADE,
+        related_name="configuration",
+    )
+
+    # Branding
+    brand_name = models.CharField(max_length=100, help_text="Display name (e.g., 'Traverse The Himalayas')")
+    tagline = models.CharField(max_length=200, blank=True, help_text="Short marketing tagline")
+    logo = models.ImageField(upload_to="sites/logos/", help_text="Main logo (recommended: 200x60)")
+    logo_light = models.ImageField(upload_to="sites/logos/", blank=True, help_text="Light version for dark backgrounds")
+    favicon = models.ImageField(upload_to="sites/favicons/", blank=True)
+
+    # Theme colors (hex format)
+    primary_color = models.CharField(max_length=7, default="#0369a1", help_text="Primary brand color (hex)")
+    secondary_color = models.CharField(max_length=7, default="#0f766e", help_text="Secondary brand color (hex)")
+    accent_color = models.CharField(max_length=7, default="#f59e0b", help_text="Accent/CTA color (hex)")
+
+    # Market segment
+    SEGMENT_CHOICES = [
+        ("general", "General"),
+        ("luxury", "Luxury"),
+        ("budget", "Budget"),
+        ("adventure", "Adventure"),
+    ]
+    target_segment = models.CharField(max_length=20, choices=SEGMENT_CHOICES, default="general")
+
+    # SEO
+    meta_description = models.CharField(max_length=160, help_text="Default meta description for the site")
+    meta_keywords = models.CharField(max_length=255, blank=True, help_text="Comma-separated keywords")
+
+    # Contact
+    contact_email = models.EmailField()
+    contact_phone = models.CharField(max_length=20, blank=True)
+    whatsapp_number = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+
+    # Social Media
+    facebook_url = models.URLField(blank=True)
+    instagram_url = models.URLField(blank=True)
+    twitter_url = models.URLField(blank=True)
+    youtube_url = models.URLField(blank=True)
+    tiktok_url = models.URLField(blank=True)
+
+    # Footer
+    footer_text = models.TextField(blank=True, help_text="Additional footer text/disclaimer")
+    copyright_name = models.CharField(max_length=100, blank=True, help_text="Copyright holder name")
+
+    # Analytics
+    google_analytics_id = models.CharField(max_length=50, blank=True, help_text="GA4 Measurement ID")
+    facebook_pixel_id = models.CharField(max_length=50, blank=True)
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Site Configuration"
+        verbose_name_plural = "Site Configurations"
+
+    def __str__(self):
+        return f"{self.brand_name} ({self.site.domain})"
+
+    @classmethod
+    def get_current(cls, request=None):
+        """Get configuration for current site."""
+        from django.contrib.sites.models import Site
+
+        if request and hasattr(request, "site_config"):
+            return request.site_config
+
+        try:
+            current_site = Site.objects.get_current()
+            return cls.objects.select_related("site").get(site=current_site)
+        except cls.DoesNotExist:
+            return None

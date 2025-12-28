@@ -17,10 +17,21 @@ User = get_user_model()
 class Command(BaseCommand):
     help = "Load sample data for Traverse The Himalayas"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--clear",
+            action="store_true",
+            help="Clear all existing data before loading fresh sample data",
+        )
+
     def handle(self, *args, **options):
+        if options["clear"]:
+            self._clear_all_data()
+
         self.stdout.write("Loading sample data...")
 
         self._copy_sample_images()
+        self._create_sites()
         self._create_tags()
         self._create_regions()
         self._create_team_members()
@@ -29,6 +40,30 @@ class Command(BaseCommand):
         self._create_glossary_terms()
 
         self.stdout.write(self.style.SUCCESS("✓ Sample data loaded successfully!"))
+
+    def _clear_all_data(self):
+        """Clear all existing sample data."""
+        from django.contrib.sites.models import Site
+
+        from apps.content.models import BlogPost
+        from apps.core.models import Region, SiteConfiguration, UniversalTag
+        from apps.glossary.models import Term
+        from apps.team.models import TeamMember
+        from apps.trips.models import Trip
+
+        self.stdout.write(self.style.WARNING("Clearing existing data..."))
+
+        # Clear in reverse dependency order
+        BlogPost.objects.all().delete()
+        Trip.objects.all().delete()
+        Term.objects.all().delete()
+        TeamMember.objects.all().delete()
+        Region.objects.all().delete()
+        UniversalTag.objects.all().delete()
+        SiteConfiguration.objects.all().delete()
+        Site.objects.exclude(pk=1).delete()  # Keep default site
+
+        self.stdout.write("  ✓ Cleared all existing data")
 
     def _copy_sample_images(self):
         """Copy sample images from static/sample to media folders."""
@@ -54,6 +89,122 @@ class Command(BaseCommand):
             for img in blog_src.glob("*.png"):
                 shutil.copy2(img, blog_dest / img.name)
             self.stdout.write(f"  Copied {len(list(blog_src.glob('*.png')))} blog images")
+
+        # Copy site logos
+        sites_src = static_sample / "sites"
+        sites_dest = media_root / "sites" / "logos"
+        sites_dest.mkdir(parents=True, exist_ok=True)
+
+        if sites_src.exists():
+            for img in sites_src.glob("*.png"):
+                shutil.copy2(img, sites_dest / img.name)
+            self.stdout.write(f"  Copied {len(list(sites_src.glob('*.png')))} site logos")
+
+    def _create_sites(self):
+        """Create Site and SiteConfiguration entries for all portals."""
+        from django.contrib.sites.models import Site
+
+        from apps.core.models import SiteConfiguration
+
+        sites_data = [
+            {
+                "domain": "traversethehimalayas.com",
+                "name": "Traverse The Himalayas",
+                "config": {
+                    "brand_name": "Traverse The Himalayas",
+                    "tagline": "Your Gateway to Himalayan Adventures",
+                    "logo": "sites/logos/traverse.png",
+                    "primary_color": "#0d9488",
+                    "secondary_color": "#0f766e",
+                    "accent_color": "#f59e0b",
+                    "target_segment": "general",
+                    "meta_description": "Expert-guided treks and expeditions through Nepal's majestic Himalayas.",
+                    "contact_email": "info@traversethehimalayas.com",
+                    "contact_phone": "+977 1-4123456",
+                    "facebook_url": "https://facebook.com/traversethehimalayas",
+                    "instagram_url": "https://instagram.com/traversethehimalayas",
+                    "copyright_name": "Traverse The Himalayas",
+                },
+            },
+            {
+                "domain": "visitnepaldirect.com",
+                "name": "VisitNepalDirect",
+                "config": {
+                    "brand_name": "VisitNepalDirect",
+                    "tagline": "Book Direct. Save More. Experience Nepal.",
+                    "logo": "sites/logos/visitnepaldirect.png",
+                    "primary_color": "#1d4ed8",
+                    "secondary_color": "#ea580c",
+                    "accent_color": "#16a34a",
+                    "target_segment": "general",
+                    "meta_description": "Book your Nepal adventure directly with local experts. Best prices guaranteed.",
+                    "contact_email": "hello@visitnepaldirect.com",
+                    "contact_phone": "+977 1-4567890",
+                    "facebook_url": "https://facebook.com/visitnepaldirect",
+                    "instagram_url": "https://instagram.com/visitnepaldirect",
+                    "copyright_name": "VisitNepalDirect",
+                },
+            },
+            {
+                "domain": "nepalluxe.com",
+                "name": "NepalLuxe",
+                "config": {
+                    "brand_name": "NepalLuxe",
+                    "tagline": "Luxury Himalayan Experiences",
+                    "logo": "sites/logos/nepalluxe.png",
+                    "primary_color": "#1e3a5f",
+                    "secondary_color": "#b8860b",
+                    "accent_color": "#c9a227",
+                    "target_segment": "luxury",
+                    "meta_description": "Exclusive luxury treks and expeditions with premium amenities in Nepal.",
+                    "contact_email": "concierge@nepalluxe.com",
+                    "contact_phone": "+977 1-5555555",
+                    "facebook_url": "https://facebook.com/nepalluxe",
+                    "instagram_url": "https://instagram.com/nepalluxe",
+                    "copyright_name": "NepalLuxe Pvt. Ltd.",
+                },
+            },
+            {
+                "domain": "budgethimalaya.com",
+                "name": "BudgetHimalaya",
+                "config": {
+                    "brand_name": "BudgetHimalaya",
+                    "tagline": "Amazing Adventures. Affordable Prices.",
+                    "logo": "sites/logos/budgethimalaya.png",
+                    "primary_color": "#16a34a",
+                    "secondary_color": "#ea580c",
+                    "accent_color": "#eab308",
+                    "target_segment": "budget",
+                    "meta_description": "Affordable Nepal treks for backpackers and budget travelers.",
+                    "contact_email": "info@budgethimalaya.com",
+                    "contact_phone": "+977 1-9876543",
+                    "facebook_url": "https://facebook.com/budgethimalaya",
+                    "instagram_url": "https://instagram.com/budgethimalaya",
+                    "copyright_name": "BudgetHimalaya",
+                },
+            },
+        ]
+
+        for i, data in enumerate(sites_data):
+            site, _ = Site.objects.update_or_create(
+                domain=data["domain"],
+                defaults={"name": data["name"]},
+            )
+
+            # Set first site as default
+            if i == 0:
+                from django.conf import settings
+
+                Site.objects.filter(pk=settings.SITE_ID).exclude(pk=site.pk).delete()
+                site.pk = settings.SITE_ID
+                site.save()
+
+            SiteConfiguration.objects.update_or_create(
+                site=site,
+                defaults=data["config"],
+            )
+
+        self.stdout.write(f"  Created {len(sites_data)} site configurations")
 
     def _create_tags(self):
         from apps.core.models import UniversalTag
