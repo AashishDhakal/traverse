@@ -205,10 +205,26 @@ class Command(BaseCommand):
             },
         ]
 
-        # First, delete the default Django site if it exists with example.com domain
+        # First, ensure site with pk=1 exists (required by SITE_ID setting)
+        # Delete example.com if it exists
         Site.objects.filter(domain="example.com").delete()
 
-        for data in sites_data:
+        # Create or update the first site (Traverse) with pk=1 for SITE_ID compatibility
+        first_site_data = sites_data[0]
+        site_1, _ = Site.objects.update_or_create(
+            pk=1,
+            defaults={
+                "domain": first_site_data["domain"],
+                "name": first_site_data["name"],
+            },
+        )
+        SiteConfiguration.objects.update_or_create(
+            site=site_1,
+            defaults=first_site_data["config"],
+        )
+
+        # Create remaining sites (skip first one as it's already created with pk=1)
+        for data in sites_data[1:]:
             site, _ = Site.objects.update_or_create(
                 domain=data["domain"],
                 defaults={"name": data["name"]},
