@@ -28,7 +28,11 @@ class SiteConfigurationMiddleware:
         request.site, request.site_config = self._get_site_config(request)
 
         # Check if site is disabled (but allow admin access)
-        if request.site_config and not request.site_config.is_active and not request.path.startswith("/admin"):
+        if (
+            request.site_config
+            and not getattr(request.site_config, "is_active", True)
+            and not request.path.startswith("/admin")
+        ):
             return HttpResponse(
                 self._get_maintenance_page(request.site_config),
                 status=503,
