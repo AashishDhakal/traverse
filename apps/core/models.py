@@ -223,6 +223,17 @@ class SiteConfiguration(models.Model):
     def __str__(self):
         return f"{self.brand_name} ({self.site.domain})"
 
+    def save(self, *args, **kwargs):
+        """Clear cache when site configuration is saved."""
+        from django.core.cache import cache
+
+        super().save(*args, **kwargs)
+
+        # Clear cache for this site's domain
+        if self.site:
+            cache.delete(f"site_config:{self.site.domain}")
+            cache.delete(f"site_config:www.{self.site.domain}")
+
     @classmethod
     def get_current(cls, request=None):
         """Get configuration for current site."""
