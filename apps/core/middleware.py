@@ -22,11 +22,45 @@ class SiteConfigurationMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        from django.http import HttpResponse
+
         # Get site configuration for this request
         request.site, request.site_config = self._get_site_config(request)
 
+        # Check if site is disabled (but allow admin access)
+        if request.site_config and not request.site_config.is_active and not request.path.startswith("/admin"):
+            return HttpResponse(
+                self._get_maintenance_page(request.site_config),
+                status=503,
+                content_type="text/html",
+            )
+
         response = self.get_response(request)
         return response
+
+    def _get_maintenance_page(self, config):
+        """Return a simple maintenance page HTML."""
+        brand = config.brand_name if config else "Site"
+        return f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>{brand} - Maintenance</title>
+            <style>
+                body {{ font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: linear-gradient(135deg, #1e293b, #0f172a); color: white; }}
+                .container {{ text-align: center; padding: 2rem; }}
+                h1 {{ font-size: 2.5rem; margin-bottom: 1rem; }}
+                p {{ color: #94a3b8; font-size: 1.25rem; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🏔️ {brand}</h1>
+                <p>We're currently performing maintenance. Please check back soon.</p>
+            </div>
+        </body>
+        </html>
+        """
 
     def _get_site_config(self, request):
         """Get Site and SiteConfiguration for the current request."""

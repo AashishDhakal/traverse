@@ -132,7 +132,7 @@ class SiteConfigurationAdmin(ModelAdmin):
         (
             "Site",
             {
-                "fields": ["site"],
+                "fields": ["site", "is_active"],
             },
         ),
         (

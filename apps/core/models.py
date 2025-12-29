@@ -149,6 +149,9 @@ class SiteConfiguration(models.Model):
         related_name="configuration",
     )
 
+    # Site Status
+    is_active = models.BooleanField(default=True, help_text="Uncheck to disable this site (shows maintenance page)")
+
     # Branding
     brand_name = models.CharField(max_length=100, help_text="Display name (e.g., 'Traverse The Himalayas')")
     tagline = models.CharField(max_length=200, blank=True, help_text="Short marketing tagline")
