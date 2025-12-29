@@ -79,6 +79,7 @@ class SiteConfigurationMiddleware:
             return cached
 
         # Try to find site by domain
+        site = None
         try:
             site = Site.objects.get(domain=host)
         except Site.DoesNotExist:
@@ -87,10 +88,14 @@ class SiteConfigurationMiddleware:
                 try:
                     site = Site.objects.get(domain=host[4:])
                 except Site.DoesNotExist:
+                    pass
+
+            # Fall back to current site based on SITE_ID, or first site
+            if site is None:
+                try:
                     site = Site.objects.get_current()
-            else:
-                # Fall back to current site based on SITE_ID
-                site = Site.objects.get_current()
+                except Site.DoesNotExist:
+                    site = Site.objects.first()  # Last resort fallback
 
         # Get configuration for this site
         try:
