@@ -49,6 +49,7 @@ class SiteConfigurationMiddleware:
         <!DOCTYPE html>
         <html>
         <head>
+            <meta charset="UTF-8">
             <title>{brand} - Maintenance</title>
             <style>
                 body {{ font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: linear-gradient(135deg, #1e293b, #0f172a); color: white; }}
@@ -59,7 +60,7 @@ class SiteConfigurationMiddleware:
         </head>
         <body>
             <div class="container">
-                <h1>🏔️ {brand}</h1>
+                <h1>{brand}</h1>
                 <p>We're currently performing maintenance. Please check back soon.</p>
             </div>
         </body>
