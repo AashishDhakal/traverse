@@ -139,6 +139,18 @@ class TripAdmin(ModelAdmin):
             },
         ),
         (
+            "Helicopter Tour Details",
+            {
+                "fields": [
+                    ("flight_duration_minutes", "helicopter_capacity"),
+                    "departure_location",
+                    "landing_sites",
+                ],
+                "classes": ["collapse"],
+                "description": "Only applicable for Helicopter Tour trip type",
+            },
+        ),
+        (
             "Publishing",
             {
                 "fields": [("is_published", "is_featured")],

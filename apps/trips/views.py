@@ -91,3 +91,26 @@ class TripDetailView(DetailView):
         context["similar_trips"] = self.object.get_similar_trips(4)
 
         return context
+
+
+class HeliTourListView(ListView):
+    """List all published helicopter tours."""
+
+    model = Trip
+    template_name = "trips/heli_list.html"
+    context_object_name = "heli_tours"
+    paginate_by = 12
+
+    def get_queryset(self):
+        return (
+            Trip.objects.filter(is_published=True, trip_type="helicopter")
+            .select_related("region")
+            .order_by("-is_featured", "-created_at")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from apps.core.models import Region
+
+        context["regions"] = Region.objects.filter(parent__isnull=True)[:10]
+        return context

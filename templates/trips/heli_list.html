@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Helicopter Tours {{ title_suffix }}{% endblock %}
+
+{% block content %}
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+            <div class="max-w-3xl mb-12">
+                <h1 class="text-4xl font-bold text-slate-900 mb-4">
+                    <span class="gradient-text">Helicopter Tours</span>
+                </h1>
+                <p class="text-lg text-slate-600">
+                    Experience the Himalayas from above. Scenic flights to iconic destinations with stunning aerial views.
+                </p>
+            </div>
+
+        <!-- Tour Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for tour in heli_tours %}
+                    <article class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl card-hover border border-slate-100">
+                        <div class="relative aspect-[4/3] overflow-hidden">
+                            {% if tour.featured_image %}
+                                <img src="{{ tour.featured_image.url }}" alt="{{ tour.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            {% else %}
+                                <div class="w-full h-full bg-gradient-to-br from-himalaya-100 to-peak-100 flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-himalaya-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3l14 9-14 9V3z"/>
+                                    </svg>
+                                </div>
+                            {% endif %}
+
+                            <div class="absolute top-4 left-4">
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-himalaya-100 text-himalaya-700">
+                                    Helicopter Tour
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4 text-xs text-slate-500 mb-3">
+                                {% if tour.flight_duration_minutes %}
+                                    <span class="flex items-center">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        {{ tour.flight_duration_minutes }} min flight
+                                    </span>
+                                {% endif %}
+                                {% if tour.max_altitude %}
+                                    <span class="flex items-center">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/>
+                                        </svg>
+                                        {{ tour.max_altitude }}m
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 group-hover:text-himalaya-600 mb-2">
+                                <a href="{{ tour.get_absolute_url }}">{{ tour.title }}</a>
+                            </h3>
+
+                            {% if tour.landing_sites %}
+                                <p class="text-sm text-himalaya-600 mb-2">
+                                    <strong>Landing:</strong> {{ tour.landing_sites|truncatewords:5 }}
+                                </p>
+                            {% endif %}
+
+                            <p class="text-sm text-slate-600 mb-4 line-clamp-2">{{ tour.tagline|default:tour.overview|truncatewords:15 }}</p>
+
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                <div>
+                                    {% if tour.discounted_price %}
+                                        <span class="text-sm text-slate-400 line-through">${{ tour.price }}</span>
+                                        <span class="text-xl font-bold text-himalaya-600">${{ tour.discounted_price }}</span>
+                                    {% else %}
+                                        <span class="text-xl font-bold text-himalaya-600">${{ tour.price }}</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ tour.get_absolute_url }}" class="text-sm font-medium text-himalaya-600 hover:text-himalaya-700">
+                                    View Details →
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="col-span-full text-center py-16">
+                        <p class="text-slate-500">No helicopter tours available yet. Check back soon!</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+        <!-- Pagination -->
+            {% if is_paginated %}
+                <div class="flex justify-center mt-12">
+                    <nav class="flex items-center space-x-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">Previous</a>
+                        {% endif %}
+
+                        <span class="px-4 py-2 text-slate-600">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">Next</a>
+                        {% endif %}
+                    </nav>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

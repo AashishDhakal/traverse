@@ -7,5 +7,6 @@ app_name = "trips"
 
 urlpatterns = [
     path("", views.TripListView.as_view(), name="trip_list"),
+    path("heli/", views.HeliTourListView.as_view(), name="heli_list"),
     path("<slug:slug>/", views.TripDetailView.as_view(), name="trip_detail"),
 ]

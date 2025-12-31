@@ -26,6 +26,7 @@ class Trip(models.Model):
         ("expedition", "Expedition"),
         ("tour", "Tour"),
         ("climbing", "Peak Climbing"),
+        ("helicopter", "Helicopter Tour"),
     ]
 
     # Basic info
@@ -79,6 +80,16 @@ class Trip(models.Model):
 
     # Map data
     route_coordinates = models.JSONField(default=list, blank=True, help_text="GeoJSON coordinates for route map")
+
+    # Helicopter-specific fields (only used when trip_type="helicopter")
+    flight_duration_minutes = models.PositiveIntegerField(
+        null=True, blank=True, help_text="Total flight time in minutes"
+    )
+    landing_sites = models.TextField(blank=True, help_text="Landing locations (e.g., 'Kalapatthar, Everest Base Camp')")
+    helicopter_capacity = models.PositiveIntegerField(
+        null=True, blank=True, default=5, help_text="Maximum passengers per helicopter"
+    )
+    departure_location = models.CharField(max_length=100, blank=True, default="Kathmandu", help_text="Departure point")
 
     # SEO
     meta_title = models.CharField(max_length=70, blank=True, help_text="SEO title (defaults to trip title)")
